@@ -2,10 +2,15 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import math
+import sqlalchemy as sa
+
+#Conexão com o banco de dados
+engine = sa.create_engine('postgresql://postgres:postgres@localhost:5432/postgres')
+dbConnection    = engine.connect()
 
 @st.cache_data
 def load_data() -> pd.DataFrame:
-  df = pd.read_csv('./fake_position.csv')
+  df = pd.read_sql("select * from \"fake_position\"", dbConnection)
   al = pd.read_excel('./fake_allocation_policies.xlsx')
   #Limpeza dos dados
   #Elimina colunas onde o account_suitability é inexistente
